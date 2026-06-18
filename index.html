@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal de Estudos da Cecília</title>
+<style>
+:root{
+  --pink:#ec407a; --purple:#7e57c2; --blue:#42a5f5; --green:#66bb6a;
+  --yellow:#ffd54f; --orange:#ff8a65; --text:#263238; --card:#ffffff;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; font-family:Arial, Helvetica, sans-serif;
+  background:radial-gradient(circle at top left,#f8bbd0 0 18%,transparent 19%),
+             radial-gradient(circle at top right,#bbdefb 0 18%,transparent 19%),
+             linear-gradient(135deg,#fffde7,#e8f5e9,#e3f2fd);
+  color:var(--text);
+}
+.app{max-width:980px;margin:0 auto;padding:16px 16px 80px}
+header{
+  background:var(--card); border:4px solid var(--purple); border-radius:28px;
+  padding:22px; text-align:center; box-shadow:0 6px 16px #0002; margin-bottom:18px;
+}
+.avatar{
+  width:96px;height:96px;border-radius:50%;margin:0 auto 10px;
+  background:linear-gradient(135deg,#f8bbd0,#e1bee7);border:4px solid var(--pink);
+  display:flex;align-items:center;justify-content:center;font-size:3rem;
+}
+h1{margin:0;color:var(--purple);font-size:2rem}
+.subtitle{margin-top:8px;font-size:1.05rem}
+.quick{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:18px 0}
+.card{
+  background:#fff;border-radius:24px;padding:18px;box-shadow:0 4px 12px #0001;border:3px solid #e0e0e0;
+}
+.card h2{margin:0 0 10px;font-size:1.25rem}
+.today{border-color:var(--pink)} .todo{border-color:var(--orange)} .progress-card{border-color:var(--green)}
+.menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-top:18px}
+.subject{
+  background:#fff;border-radius:26px;padding:18px;text-decoration:none;color:var(--text);
+  border:4px solid #90caf9;box-shadow:0 5px 13px #0002;transition:.15s;display:block;
+}
+.subject:hover{transform:translateY(-3px)}
+.icon{font-size:2.8rem;margin-bottom:8px}
+.subject h3{margin:0;font-size:1.35rem}
+.subject p{margin:8px 0 12px;line-height:1.35}
+.badge{
+  display:inline-block;padding:7px 10px;border-radius:999px;font-weight:bold;font-size:.9rem;
+  background:#e3f2fd;color:#1565c0;
+}
+.math{border-color:#42a5f5}.port{border-color:#ec407a}.cien{border-color:#66bb6a}.geo{border-color:#ffb300}
+.ing{border-color:#7e57c2}.rel{border-color:#8d6e63}.mus{border-color:#ff7043}.arte{border-color:#ab47bc}
+.bar{height:14px;background:#eceff1;border-radius:999px;overflow:hidden;margin:8px 0 4px}
+.fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#66bb6a,#2e7d32)}
+.links{margin-top:10px;display:grid;gap:8px}
+.links a{
+  display:block;background:#f5f5f5;padding:10px;border-radius:14px;color:#1565c0;
+  text-decoration:none;font-weight:bold;
+}
+.links a:hover{background:#e3f2fd}
+.note{margin-top:18px;background:#fff8e1;border-left:8px solid var(--orange);border-radius:18px;padding:14px}
+footer{text-align:center;color:#546e7a;margin-top:24px;font-size:.95rem}
+@media(max-width:600px){
+  h1{font-size:1.55rem}
+  .app{padding:12px 12px 60px}
+  .subject{padding:16px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="avatar">👧🏻</div>
+  <h1>Portal de Estudos da Cecília</h1>
+  <div class="subtitle">Joguinhos, revisões e atividades por matéria 📚✨</div>
+</header>
+
+<section class="quick">
+  <div class="card today">
+    <h2>🎯 Próxima revisão</h2>
+    <p><b>Matemática PR2</b><br>Subtração, fatos básicos e probleminhas.</p>
+    <div class="links">
+      <a href="matematica/pr2-subtracao.html">Abrir joguinho de Matemática</a>
+    </div>
+  </div>
+
+  <div class="card todo">
+    <h2>📝 Como usar</h2>
+    <p>Escolha uma matéria abaixo. Cada botão pode abrir um joguinho, uma revisão ou uma atividade.</p>
+  </div>
+
+  <div class="card progress-card">
+    <h2>⭐ Progresso geral</h2>
+    <p>Atualize os percentuais conforme novos joguinhos forem criados.</p>
+    <div class="bar"><div class="fill" style="width:20%"></div></div>
+    <b>20% configurado</b>
+  </div>
+</section>
+
+<h2 style="color:#6a1b9a">📚 Matérias</h2>
+
+<section class="menu">
+  <div class="subject math">
+    <div class="icon">➖</div>
+    <h3>Matemática</h3>
+    <p>Continhas, problemas, adição, subtração e desafios.</p>
+    <span class="badge">1 joguinho pronto</span>
+    <div class="links"><a href="matematica/pr2-subtracao.html">PR2 — Subtração</a></div>
+  </div>
+
+  <div class="subject port">
+    <div class="icon">📖</div>
+    <h3>Português</h3>
+    <p>Leitura, interpretação, conto, poema, tirinha e ortografia.</p>
+    <span class="badge">Em breve</span>
+  </div>
+
+  <div class="subject cien">
+    <div class="icon">🌱</div>
+    <h3>Ciências</h3>
+    <p>Plantas, ciclo de vida, alimentação e reprodução.</p>
+    <span class="badge">Em breve</span>
+  </div>
+
+  <div class="subject geo">
+    <div class="icon">🌎</div>
+    <h3>Geografia</h3>
+    <p>Campo e cidade, zona rural, zona urbana e profissões.</p>
+    <span class="badge">Em breve</span>
+  </div>
+
+  <div class="subject ing">
+    <div class="icon">🇬🇧</div>
+    <h3>Inglês</h3>
+    <p>Plants, insects, colors, listening e Chapter 3.</p>
+    <span class="badge">Em breve</span>
+  </div>
+
+  <div class="subject rel">
+    <div class="icon">📜</div>
+    <h3>Ensino Religioso</h3>
+    <p>Profissões na Bíblia e personagens bíblicos.</p>
+    <span class="badge">Em breve</span>
+  </div>
+
+  <div class="subject mus">
+    <div class="icon">🎵</div>
+    <h3>Musicalização</h3>
+    <p>Instrumentos de corda, sopro e percussão.</p>
+    <span class="badge">Em breve</span>
+  </div>
+
+  <div class="subject arte">
+    <div class="icon">🎨</div>
+    <h3>Arte</h3>
+    <p>Atividades criativas, instrumentos e brinquedos indígenas.</p>
+    <span class="badge">Em breve</span>
+  </div>
+</section>
+
+<div class="note">
+  <b>📌 Organização sugerida no GitHub:</b><br>
+  Crie uma pasta para cada matéria e coloque os joguinhos dentro dela. Exemplo:
+  <br><br>
+  <code>matematica/pr2-subtracao.html</code><br>
+  <code>ciencias/ciclo-de-vida-plantas.html</code><br>
+  <code>portugues/capitulo-5-e-6.html</code>
+</div>
+
+<footer>Feito com carinho para revisar brincando 💜</footer>
+</div>
+</body>
+</html>
