@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game da Prova - Ciências: Plantas</title>
+<style>
+:root{
+  --green:#2e7d32; --green2:#66bb6a; --light:#f1f8e9; --yellow:#fff8e1;
+  --orange:#fb8c00; --purple:#7b1fa2; --blue:#1976d2; --red:#c62828;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; padding:16px; font-family:Arial, sans-serif;
+  background:linear-gradient(135deg,#e8f5e9,#fffde7,#e3f2fd);
+  color:#263238;
+}
+.wrap{max-width:1050px;margin:auto}
+header{
+  background:white;border:4px solid var(--green);border-radius:24px;
+  padding:18px;text-align:center;box-shadow:0 4px 12px #0002;
+}
+h1{margin:0;color:var(--green);font-size:2.1rem}
+.subtitle{font-size:1.05rem;margin-top:8px}
+.topbar{
+  position:sticky;top:0;z-index:10;background:#ffffffee;border:2px solid #c8e6c9;
+  border-radius:16px;padding:10px;margin:14px 0;display:flex;gap:10px;flex-wrap:wrap;
+  justify-content:space-between;align-items:center;backdrop-filter:blur(4px)
+}
+.badge{background:var(--purple);color:white;border-radius:999px;padding:10px 14px;font-weight:bold}
+button.main{
+  background:var(--orange);color:white;border:0;border-radius:12px;padding:11px 15px;
+  font-weight:bold;font-size:1rem;cursor:pointer
+}
+button.main:hover{filter:brightness(.95)}
+.card{
+  background:white;border-radius:20px;padding:16px;margin:16px 0;box-shadow:0 3px 10px #0002;
+  border-left:9px solid var(--green)
+}
+.card.cap5{border-left-color:var(--green)}
+.card.cap6{border-left-color:var(--blue)}
+h2{margin:0 0 10px;color:var(--purple)}
+h3{margin:12px 0 8px;color:var(--green)}
+.q{font-weight:bold;font-size:1.08rem;margin:10px 0}
+.options button{
+  display:block;width:100%;text-align:left;margin:8px 0;padding:12px;border-radius:12px;
+  border:2px solid #c8e6c9;background:#fbfffb;font-size:1rem;cursor:pointer
+}
+.options button:hover{background:#e8f5e9}
+.correct{background:#c8e6c9!important;border-color:var(--green)!important}
+.wrong{background:#ffcdd2!important;border-color:var(--red)!important}
+.feedback{display:none;margin-top:9px;font-weight:bold}
+.ok{color:var(--green)} .no{color:var(--red)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.info{background:#fffde7;border:2px dashed #f9a825;border-radius:14px;padding:12px}
+.row{background:#f5f5f5;border-radius:12px;padding:10px;margin:8px 0}
+select,input[type=text]{
+  width:100%;max-width:520px;padding:9px;border:2px solid #c8e6c9;border-radius:10px;font-size:1rem
+}
+.word{
+  display:inline-block;background:#e3f2fd;border:2px solid var(--blue);
+  border-radius:10px;padding:8px 12px;margin:5px;cursor:grab;font-weight:bold
+}
+.drop{
+  min-height:40px;background:#fafafa;border:2px dashed #aaa;border-radius:10px;padding:8px;margin-top:6px
+}
+.sequence{
+  display:flex;flex-wrap:wrap;gap:8px;margin:8px 0
+}
+.pill{
+  background:#ede7f6;border:2px solid #7e57c2;border-radius:999px;padding:8px 12px;
+  cursor:pointer;user-select:none
+}
+.pill.selected{background:#d1c4e9}
+.final{
+  text-align:center;font-size:1.25rem;font-weight:bold;background:white;border-radius:20px;
+  padding:18px;margin:20px 0;border:4px solid var(--green)
+}
+.small{font-size:.92rem;color:#455a64}
+@media(max-width:650px){h1{font-size:1.55rem}.topbar{position:static}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>🌱 Game da Prova da Cecília</h1>
+  <div class="subtitle"><b>Ciências — Capítulos 5 e 6</b><br>
+  Ciclo de vida das plantas • Reprodução • Plantações • Fotossíntese • Plantas como alimento</div>
+</header>
+
+<div class="topbar">
+  <div class="badge">Pontuação: <span id="score">0</span> / <span id="total">0</span></div>
+  <div class="badge">Nível: <span id="level">Começando 🌱</span></div>
+  <button class="main" onclick="location.reload()">Recomeçar</button>
+</div>
+
+<section class="card cap5">
+  <h2>🌿 Fase 1 — Capítulo 5: Ciclo de vida e reprodução</h2>
+  <div id="quiz5"></div>
+</section>
+
+<section class="card cap5">
+  <h2>🔁 Fase 2 — Ordem do ciclo de vida</h2>
+  <p class="small">Clique nas etapas na ordem correta.</p>
+  <div id="seqWords" class="sequence"></div>
+  <div class="row"><b>Sua ordem:</b> <span id="seqAnswer"></span></div>
+  <button class="main" onclick="checkSequence()">Conferir ciclo</button>
+  <div id="seqFeedback" class="feedback"></div>
+</section>
+
+<section class="card cap5">
+  <h2>🌬️ Fase 3 — Dispersão de sementes</h2>
+  <div class="grid">
+    <div class="row">Dente-de-leão voando longe pelo ar:
+      <select data-set="cap5select" data-answer="vento"><option></option><option>vento</option><option>água</option><option>animais</option><option>mudas</option></select>
+    </div>
+    <div class="row">Coco boiando até uma ilha:
+      <select data-set="cap5select" data-answer="água"><option></option><option>vento</option><option>água</option><option>animais</option><option>botões vegetativos</option></select>
+    </div>
+    <div class="row">Ave come fruto e leva sementes para outro lugar:
+      <select data-set="cap5select" data-answer="animais"><option></option><option>vento</option><option>água</option><option>animais</option><option>raiz</option></select>
+    </div>
+    <div class="row">Agricultor planta sementes em fileiras:
+      <select data-set="cap5select" data-answer="pessoas"><option></option><option>pessoas</option><option>vento</option><option>água</option><option>outono</option></select>
+    </div>
+  </div>
+  <button class="main" onclick="checkSet('cap5select','cap5selectFeedback')">Conferir</button>
+  <div id="cap5selectFeedback" class="feedback"></div>
+</section>
+
+<section class="card cap5">
+  <h2>🥔 Fase 4 — Tipos de reprodução</h2>
+  <div class="grid">
+    <div class="row">Feijão nascendo:
+      <select data-set="repro" data-answer="semente"><option></option><option>semente</option><option>tubérculo</option><option>muda</option></select>
+    </div>
+    <div class="row">Batata com brotos:
+      <select data-set="repro" data-answer="tubérculo"><option></option><option>semente</option><option>tubérculo</option><option>vento</option></select>
+    </div>
+    <div class="row">Folha de suculenta virando nova plantinha:
+      <select data-set="repro" data-answer="muda"><option></option><option>muda</option><option>polinização</option><option>fruto</option></select>
+    </div>
+    <div class="row">Mandioca plantada por pedaço do caule:
+      <select data-set="repro" data-answer="muda"><option></option><option>muda</option><option>água</option><option>flor</option></select>
+    </div>
+  </div>
+  <button class="main" onclick="checkSet('repro','reproFeedback')">Conferir</button>
+  <div id="reproFeedback" class="feedback"></div>
+</section>
+
+<section class="card cap6">
+  <h2>☀️ Fase 5 — Capítulo 6: As plantas também comem</h2>
+  <div id="quiz6"></div>
+</section>
+
+<section class="card cap6">
+  <h2>🍃 Fase 6 — Complete a receita da fotossíntese</h2>
+  <div class="row">A planta usa energia da <select data-set="foto" data-answer="luz solar"><option></option><option>luz solar</option><option>lua</option><option>areia</option></select>.</div>
+  <div class="row">As raízes absorvem <select data-set="foto" data-answer="água e minerais"><option></option><option>oxigênio</option><option>água e minerais</option><option>açúcar</option></select>.</div>
+  <div class="row">Pelos estômatos entra <select data-set="foto" data-answer="gás carbônico"><option></option><option>gás carbônico</option><option>sal</option><option>fruto</option></select>.</div>
+  <div class="row">A planta fabrica <select data-set="foto" data-answer="açúcar"><option></option><option>açúcar</option><option>terra</option><option>remédio</option></select> e libera <select data-set="foto" data-answer="oxigênio"><option></option><option>oxigênio</option><option>gás carbônico</option><option>semente</option></select>.</div>
+  <button class="main" onclick="checkSet('foto','fotoFeedback')">Conferir</button>
+  <div id="fotoFeedback" class="feedback"></div>
+</section>
+
+<section class="card cap6">
+  <h2>🥗 Fase 7 — Partes comestíveis</h2>
+  <div class="grid">
+    <div class="row">Alface é:
+      <select data-set="comida" data-answer="folha"><option></option><option>folha</option><option>fruto</option><option>raiz</option><option>semente</option></select>
+    </div>
+    <div class="row">Brócolis é:
+      <select data-set="comida" data-answer="flor"><option></option><option>flor</option><option>caule</option><option>raiz</option><option>semente</option></select>
+    </div>
+    <div class="row">Tomate é:
+      <select data-set="comida" data-answer="fruto"><option></option><option>fruto</option><option>folha</option><option>raiz</option><option>caule</option></select>
+    </div>
+    <div class="row">Cana-de-açúcar é:
+      <select data-set="comida" data-answer="caule"><option></option><option>caule</option><option>flor</option><option>fruto</option><option>raiz</option></select>
+    </div>
+    <div class="row">Cenoura/mandioca são:
+      <select data-set="comida" data-answer="raiz"><option></option><option>raiz</option><option>folha</option><option>semente</option><option>flor</option></select>
+    </div>
+    <div class="row">Milho, feijão e lentilha são:
+      <select data-set="comida" data-answer="semente"><option></option><option>semente</option><option>caule</option><option>flor</option><option>folha</option></select>
+    </div>
+  </div>
+  <button class="main" onclick="checkSet('comida','comidaFeedback')">Conferir</button>
+  <div id="comidaFeedback" class="feedback"></div>
+</section>
+
+<section class="card cap6">
+  <h2>🌳 Fase 8 — Arraste as partes da planta</h2>
+  <p class="small">Arraste a palavra para a função correta.</p>
+  <div id="words">
+    <span class="word" draggable="true" data-word="Raiz">Raiz</span>
+    <span class="word" draggable="true" data-word="Caule">Caule</span>
+    <span class="word" draggable="true" data-word="Folha">Folha</span>
+    <span class="word" draggable="true" data-word="Fruto">Fruto</span>
+    <span class="word" draggable="true" data-word="Flor">Flor</span>
+  </div>
+  <div class="grid">
+    <div class="row">Absorve água e minerais do solo.<div class="drop" data-answer="Raiz"></div></div>
+    <div class="row">Sustenta a planta e transporta água/nutrientes.<div class="drop" data-answer="Caule"></div></div>
+    <div class="row">Absorve gás carbônico e faz fotossíntese.<div class="drop" data-answer="Folha"></div></div>
+    <div class="row">Onde fica a semente.<div class="drop" data-answer="Fruto"></div></div>
+    <div class="row">Participa da polinização.<div class="drop" data-answer="Flor"></div></div>
+  </div>
+  <button class="main" onclick="checkDrag()">Conferir arraste</button>
+  <div id="dragFeedback" class="feedback"></div>
+</section>
+
+<section class="card">
+  <h2>🏆 Desafio Final</h2>
+  <div class="grid">
+    <div class="info">
+      <b>1. Por que a laranjeira sob o telhado não produziu frutos?</b><br><br>
+      <input id="short1" type="text" placeholder="Escreva aqui...">
+    </div>
+    <div class="info">
+      <b>2. O que pode fazer a planta parar de crescer?</b><br><br>
+      <input id="short2" type="text" placeholder="Escreva aqui...">
+    </div>
+  </div>
+  <button class="main" onclick="checkShorts()">Conferir desafio</button>
+  <div id="shortFeedback" class="feedback"></div>
+</section>
+
+<div class="final" id="finalMsg">Responda as fases para ganhar sua medalha! 🌻</div>
+
+<section class="card">
+  <h2>📌 Cola rápida antes da prova</h2>
+  <div class="grid">
+    <div class="info"><b>Cap. 5:</b> semente → germinação → crescimento → floração → frutos/sementes. A reprodução pode ser por sementes, dispersão, tubérculos e mudas.</div>
+    <div class="info"><b>Cap. 6:</b> fotossíntese usa água, gás carbônico, minerais e luz solar. Produz açúcar e libera oxigênio.</div>
+    <div class="info"><b>Plantações:</b> precisam de boas sementes/mudas, nutrientes no solo, água, ar, temperatura e luz. O solo também precisa descansar.</div>
+    <div class="info"><b>Comida:</b> comemos folhas, flores, frutos, caules, raízes e sementes. Plantas também podem ser remédios.</div>
+  </div>
+</section>
+
+</div>
+
+<script>
+const cap5 = [
+ {q:"Qual é a ordem correta do ciclo de vida de muitas plantas?", a:"Semente, germinação, crescimento, floração, frutos e sementes", o:["Fruto, raiz, flor, semente","Semente, germinação, crescimento, floração, frutos e sementes","Flor, fruto, folha, raiz","Caule, folha, água, fruto"]},
+ {q:"O que é germinação?", a:"Transformação da semente em uma nova planta", o:["Queda das folhas","Transformação da semente em uma nova planta","Colheita dos frutos","Descanso do solo"]},
+ {q:"O que é polinização?", a:"Quando o pólen chega à parte feminina da flor e ajuda a formar sementes", o:["Quando a raiz absorve água","Quando o pólen chega à parte feminina da flor e ajuda a formar sementes","Quando o vento derruba folhas","Quando o fruto é comido"]},
+ {q:"Como sementes podem chegar a ilhas desabitadas?", a:"Pela dispersão por água, vento ou animais", o:["Somente por pessoas","Pela dispersão por água, vento ou animais","Porque nascem sem sementes","Porque caem do céu"]},
+ {q:"A batata pode gerar nova planta porque é um:", a:"Tubérculo", o:["Tubérculo","Fruto","Flor","Estômato"]},
+ {q:"Para uma plantação crescer bem, é importante ter:", a:"Água, luz, solo nutritivo, ar e temperatura adequada", o:["Só água","Sal de cozinha","Água, luz, solo nutritivo, ar e temperatura adequada","Apenas sombra"]},
+ {q:"Por que deixar a terra descansar pode ser importante?", a:"Para o solo recuperar nutrientes", o:["Para o solo recuperar nutrientes","Para matar todas as plantas","Para acabar com a água","Para impedir a germinação"]},
+ {q:"No inverno, algumas plantas:", a:"Perdem folhas e depois se renovam", o:["Sempre morrem","Perdem folhas e depois se renovam","Param de existir","Viraram animais"]}
+];
+
+const cap6 = [
+ {q:"As plantas também comem?", a:"Sim, elas produzem o próprio alimento", o:["Não, nunca precisam de alimento","Sim, elas produzem o próprio alimento","Só comem ração","Só comem terra"]},
+ {q:"Como se chama o processo em que a planta faz seu alimento?", a:"Fotossíntese", o:["Fotossíntese","Polinização","Dispersão","Transplante"]},
+ {q:"O que são estômatos?", a:"Pequenos buraquinhos nas folhas", o:["Raízes grandes","Pequenos buraquinhos nas folhas","Sementes comestíveis","Frutos verdes"]},
+ {q:"Qual gás a planta libera para o ar?", a:"Oxigênio", o:["Gás carbônico","Oxigênio","Fumaça","Sal"]},
+ {q:"Qual gás entra na planta pelas folhas?", a:"Gás carbônico", o:["Gás carbônico","Oxigênio apenas","Perfume","Vapor de remédio"]},
+ {q:"Qual destes NÃO é necessário para a planta fabricar alimento?", a:"Sal de cozinha", o:["Água","Luz solar","Gás carbônico","Sal de cozinha"]},
+ {q:"Por que humanos e animais dependem das plantas?", a:"Porque elas produzem alimentos e oxigênio", o:["Porque elas produzem alimentos e oxigênio","Porque elas fazem brinquedos sozinhas","Porque elas não precisam de Sol","Porque elas comem animais"]},
+ {q:"Qual planta medicinal foi citada como calmante?", a:"Camomila", o:["Camomila","Milho","Cana-de-açúcar","Tomate"]}
+];
+
+let score = 0;
+let total = cap5.length + cap6.length + 7; 
+let answered = new Set();
+document.getElementById("total").textContent = total;
+
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+
+function renderQuiz(list, id, prefix){
+  const box = document.getElementById(id);
+  list.forEach((item, idx)=>{
+    const div = document.createElement("div");
+    div.className = "card";
+    div.style.borderLeftColor = prefix==="c5" ? "#2e7d32" : "#1976d2";
+    div.innerHTML = `<div class="q">${idx+1}. ${item.q}</div><div class="options"></div><div class="feedback"></div>`;
+    const opts = div.querySelector(".options");
+    shuffle(item.o).forEach(opt=>{
+      const b = document.createElement("button");
+      b.textContent = opt;
+      b.onclick = () => answer(prefix+idx, opt, item.a, b, opts, div);
+      opts.appendChild(b);
+    });
+    box.appendChild(div);
+  });
+}
+
+function answer(key,opt,right,btn,opts,div){
+  if(answered.has(key)) return;
+  answered.add(key);
+  const fb = div.querySelector(".feedback");
+  if(opt===right){
+    btn.classList.add("correct"); score++;
+    fb.textContent="✅ Muito bem!";
+    fb.className="feedback ok";
+  }else{
+    btn.classList.add("wrong");
+    [...opts.children].forEach(x=>{if(x.textContent===right)x.classList.add("correct")});
+    fb.textContent="❌ Quase! Resposta certa: " + right;
+    fb.className="feedback no";
+  }
+  fb.style.display="block";
+  update();
+}
+
+function update(){
+  document.getElementById("score").textContent = score;
+  const pct = score/total;
+  let level = "Começando 🌱";
+  let msg = "Continue! Cada pergunta é uma sementinha de conhecimento. 🌱";
+  if(pct>=.5){level="Bronze 🥉"; msg="Bom trabalho! Você já sabe bastante. Revise os erros."}
+  if(pct>=.75){level="Prata 🥈"; msg="Muito bem! Você está quase pronta para a prova!"}
+  if(pct>=.9){level="Ouro 🥇"; msg="Excelente, Cecília! Especialista em plantas! 🌻"}
+  document.getElementById("level").textContent = level;
+  
+document.getElementById("finalMsg").innerHTML =
+`<div>${msg}</div><div style="margin-top:10px;font-size:1.4rem;">
+⭐ Pontuação: <b>${score}</b> de <b>${total}</b> pontos
+</div>
+<div style="margin-top:8px;">
+Percentual de acertos: <b>${Math.round((score/total)*100)}%</b>
+</div>`;
+
+}
+
+const seqCorrect = ["Semente","Germinação","Crescimento","Floração","Frutos e sementes"];
+let seq = [];
+function setupSeq(){
+  const box = document.getElementById("seqWords");
+  shuffle(seqCorrect).forEach(w=>{
+    const s = document.createElement("span");
+    s.className="pill"; s.textContent=w;
+    s.onclick=()=>{
+      if(answered.has("seq"))return;
+      s.classList.add("selected"); seq.push(w);
+      document.getElementById("seqAnswer").textContent = seq.join(" → ");
+    };
+    box.appendChild(s);
+  });
+}
+function checkSequence(){
+  if(answered.has("seq"))return;
+  const ok = seq.join("|")===seqCorrect.join("|");
+  const fb=document.getElementById("seqFeedback");
+  if(ok){score++; fb.textContent="✅ Ordem perfeita!"; fb.className="feedback ok";}
+  else{fb.textContent="❌ Ordem correta: " + seqCorrect.join(" → "); fb.className="feedback no";}
+  fb.style.display="block"; answered.add("seq"); update();
+}
+
+function checkSet(setName, fbId){
+  if(answered.has(setName))return;
+  const els = document.querySelectorAll(`[data-set="${setName}"]`);
+  let ok=0;
+  els.forEach(e=>{
+    if(e.value===e.dataset.answer){ok++; e.style.borderColor="#2e7d32"; e.style.background="#e8f5e9";}
+    else{e.style.borderColor="#c62828"; e.style.background="#ffebee";}
+  });
+  const fb=document.getElementById(fbId);
+  if(ok===els.length){score++; fb.textContent="✅ Tudo certo!"; fb.className="feedback ok";}
+  else{fb.textContent="❌ Revise as opções marcadas em vermelho."; fb.className="feedback no";}
+  fb.style.display="block"; answered.add(setName); update();
+}
+
+let dragged=null;
+document.querySelectorAll(".word").forEach(w=>w.addEventListener("dragstart",e=>dragged=e.target));
+document.querySelectorAll(".drop").forEach(d=>{
+  d.addEventListener("dragover",e=>e.preventDefault());
+  d.addEventListener("drop",e=>{
+    e.preventDefault();
+    if(dragged){d.textContent=dragged.dataset.word; d.dataset.current=dragged.dataset.word;}
+  });
+});
+function checkDrag(){
+  if(answered.has("drag"))return;
+  const drops=document.querySelectorAll(".drop");
+  let ok=0;
+  drops.forEach(d=>{
+    if(d.dataset.current===d.dataset.answer){ok++; d.style.borderColor="#2e7d32"; d.style.background="#c8e6c9";}
+    else{d.style.borderColor="#c62828"; d.style.background="#ffcdd2";}
+  });
+  const fb=document.getElementById("dragFeedback");
+  if(ok===drops.length){score++; fb.textContent="✅ Partes e funções corretas!"; fb.className="feedback ok";}
+  else{fb.textContent="❌ Confira: raiz absorve; caule sustenta; folha faz fotossíntese; fruto guarda sementes; flor participa da polinização."; fb.className="feedback no";}
+  fb.style.display="block"; answered.add("drag"); update();
+}
+
+function checkShorts(){
+  if(answered.has("shorts"))return;
+  const a1=document.getElementById("short1").value.toLowerCase();
+  const a2=document.getElementById("short2").value.toLowerCase();
+  const ok1 = a1.includes("sol") || a1.includes("luz") || a1.includes("energia");
+  const ok2 = a2.includes("falta") || a2.includes("água") || a2.includes("agua") || a2.includes("luz") || a2.includes("nutriente") || a2.includes("solo") || a2.includes("ar");
+  const fb=document.getElementById("shortFeedback");
+  if(ok1 && ok2){score++; fb.textContent="✅ Ótimas respostas!"; fb.className="feedback ok";}
+  else{fb.textContent="❌ Respostas esperadas: 1) faltava luz/energia do Sol. 2) falta de água, luz, nutrientes, ar, solo adequado ou temperatura adequada."; fb.className="feedback no";}
+  fb.style.display="block"; answered.add("shorts"); update();
+}
+
+renderQuiz(cap5,"quiz5","c5");
+setupSeq();
+renderQuiz(cap6,"quiz6","c6");
+update();
+</script>
+</body>
+</html>
