@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revisão Interativa - Português Cap. 5 e 6</title>
+<style>
+:root{--purple:#6a1b9a;--blue:#1565c0;--orange:#ef6c00;--red:#c62828;--green:#2e7d32}
+*{box-sizing:border-box}
+body{margin:0;padding:16px;font-family:Arial,sans-serif;background:linear-gradient(135deg,#fff7ed,#ede7f6,#e3f2fd);color:#263238}
+.wrap{max-width:980px;margin:auto}
+header{background:#fff;border:4px solid var(--purple);border-radius:22px;padding:18px;text-align:center;box-shadow:0 4px 10px #0002}
+h1{margin:0;color:var(--purple);font-size:2rem}.subtitle{margin-top:8px;font-size:1.05rem}
+.topbar{background:#ffffffee;border:2px solid #d1c4e9;border-radius:16px;padding:10px;margin:14px 0;display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap;position:sticky;top:0;z-index:10}
+.badge{background:var(--purple);color:white;border-radius:999px;padding:10px 14px;font-weight:bold}
+button.main{border:0;border-radius:12px;background:var(--orange);color:white;padding:11px 15px;font-size:1rem;font-weight:bold;cursor:pointer}
+.card{background:white;border-radius:18px;padding:16px;margin:16px 0;box-shadow:0 3px 10px #0002;border-left:8px solid var(--purple)}
+.card.cap6{border-left-color:var(--blue)} h2{margin:0 0 10px;color:var(--purple)}
+.question{font-weight:bold;font-size:1.08rem;margin:10px 0}
+.options button{display:block;width:100%;text-align:left;margin:8px 0;padding:12px;border-radius:12px;border:2px solid #d1c4e9;background:#fbf8ff;font-size:1rem;cursor:pointer}
+.options button:hover{background:#ede7f6}.correct{background:#c8e6c9!important;border-color:var(--green)!important}.wrong{background:#ffcdd2!important;border-color:var(--red)!important}
+.feedback{display:none;margin-top:8px;font-weight:bold}.ok{color:var(--green)}.bad{color:var(--red)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.row{background:#f5f5f5;border-radius:12px;padding:10px;margin:8px 0}
+select,input[type=text]{width:100%;padding:9px;border:2px solid #d1c4e9;border-radius:10px;font-size:1rem;margin-top:6px}
+.truefalse button{width:48%;margin:5px 1%;padding:10px;border-radius:10px;border:2px solid #d1c4e9;background:#fff;font-weight:bold;cursor:pointer}
+.result{text-align:center;font-size:1.25rem;font-weight:bold;background:white;border-radius:20px;padding:18px;margin:20px 0;border:4px solid var(--purple)}
+.note{background:#fffde7;border:2px dashed #f9a825;border-radius:14px;padding:12px;margin:10px 0}.small{font-size:.92rem;color:#455a64}
+.progressOuter{width:100%;height:18px;background:#eee;border-radius:999px;overflow:hidden;border:1px solid #d1c4e9}
+.progressInner{height:100%;width:0%;background:var(--green);transition:width .25s}
+@media(max-width:650px){h1{font-size:1.55rem}.badge{font-size:.92rem}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<h1>📚 Revisão Interativa de Português</h1>
+<div class="subtitle"><b>Capítulos 5 e 6</b><br>Letra H, X/CH, letra C, tirinha, conto e interpretação</div>
+</header>
+
+<div class="topbar">
+<div class="badge">Acertos: <span id="score">0</span></div>
+<div class="badge">Respondidas: <span id="done">0</span> / <span id="total">0</span></div>
+<div class="badge">Nota: <span id="nota">0</span>/100</div>
+<button class="main" onclick="location.reload()">Recomeçar</button>
+<div class="progressOuter"><div id="bar" class="progressInner"></div></div>
+</div>
+
+<section class="card">
+<h2>📖 Resumo rápido</h2>
+<div class="grid">
+<div class="note"><b>Cap. 5:</b> Nathália descobre a importância da letra <b>H</b>. O H pode aparecer em <b>NH, LH e CH</b>. Em palavras como <b>hotel</b>, ele não tem som.</div>
+<div class="note"><b>O guarda-chuva apertado:</b> a história brinca com a água da chuva escorrendo, como se fosse “xixi” do guarda-chuva.</div>
+<div class="note"><b>X e CH:</b> algumas palavras têm sons parecidos, mas escrita diferente: <b>xampu, xícara, chave, chapéu</b>.</div>
+<div class="note"><b>Cap. 6:</b> tirinhas são histórias curtas em quadrinhos. A letra <b>C</b> tem som de K antes de A/O/U e som de S antes de E/I.</div>
+</div>
+</section>
+
+<section class="card"><h2>✨ Parte 1 — Capítulo 5</h2><div id="quiz5"></div></section>
+
+<section class="card">
+<h2>🔤 Parte 2 — Complete as palavras</h2>
+<p class="small">A nota é calculada quando você confere esta parte.</p>
+<div class="grid">
+<div class="row">SONO + H vira:<input data-group="palavras" data-answer="sonho" type="text"></div>
+<div class="row">GALO + H vira:<input data-group="palavras" data-answer="galho" type="text"></div>
+<div class="row">FILA + H vira:<input data-group="palavras" data-answer="filha" type="text"></div>
+<div class="row">B A N H E I R O desembaralhado:<input data-group="palavras" data-answer="banheiro" type="text"></div>
+<div class="row">O guarda-____ ficou molhado:<input data-group="palavras" data-answer="chuva" type="text"></div>
+</div>
+<button class="main" onclick="checkGroup('palavras','palavrasFb')">Conferir palavras</button>
+<div id="palavrasFb" class="feedback"></div>
+</section>
+
+<section class="card"><h2>✅ Parte 3 — Verdadeiro ou falso</h2><div id="vf"></div></section>
+
+<section class="card cap6"><h2>🛁 Parte 4 — Capítulo 6</h2><div id="quiz6"></div></section>
+
+<section class="card cap6">
+<h2>🔡 Parte 5 — Sons da letra C</h2>
+<div class="grid">
+<div class="row">CA tem som de:<select data-group="somc" data-answer="K"><option></option><option>K</option><option>S</option></select></div>
+<div class="row">CE tem som de:<select data-group="somc" data-answer="S"><option></option><option>K</option><option>S</option></select></div>
+<div class="row">CI tem som de:<select data-group="somc" data-answer="S"><option></option><option>K</option><option>S</option></select></div>
+<div class="row">CO tem som de:<select data-group="somc" data-answer="K"><option></option><option>K</option><option>S</option></select></div>
+<div class="row">CU tem som de:<select data-group="somc" data-answer="K"><option></option><option>K</option><option>S</option></select></div>
+</div>
+<button class="main" onclick="checkGroup('somc','somcFb')">Conferir sons</button>
+<div id="somcFb" class="feedback"></div>
+</section>
+
+<section class="card cap6">
+<h2>🧩 Parte 6 — Complete com X ou CH</h2>
+<div class="grid">
+<div class="row">___ave<select data-group="xch" data-answer="ch"><option></option><option>x</option><option>ch</option></select></div>
+<div class="row">___ampu<select data-group="xch" data-answer="x"><option></option><option>x</option><option>ch</option></select></div>
+<div class="row">___ícara<select data-group="xch" data-answer="x"><option></option><option>x</option><option>ch</option></select></div>
+<div class="row">___apéu<select data-group="xch" data-answer="ch"><option></option><option>x</option><option>ch</option></select></div>
+<div class="row">___ocalho<select data-group="xch" data-answer="ch"><option></option><option>x</option><option>ch</option></select></div>
+</div>
+<button class="main" onclick="checkGroup('xch','xchFb')">Conferir X/CH</button>
+<div id="xchFb" class="feedback"></div>
+</section>
+
+<section class="card">
+<h2>✍️ Parte 7 — Respostas curtas</h2>
+<div class="row"><b>1. Crie um título divertido para a tirinha do Calvin.</b><input id="r1" type="text" placeholder="Digite sua resposta..."></div>
+<div class="row"><b>2. Escreva uma frase com uma palavra com CH e uma palavra com X.</b><input id="r2" type="text" placeholder="Digite sua resposta..."></div>
+<button class="main" onclick="checkShort()">Conferir respostas</button>
+<div id="shortFb" class="feedback"></div>
+</section>
+
+<div class="result" id="final">🌟 Comece a responder para ver sua nota subir automaticamente.</div>
+
+<section class="card">
+<h2>📌 Para lembrar antes da prova</h2>
+<div class="grid">
+<div class="note"><b>H:</b> hotel não tem som de H, mas em ninho, galho e chuva o H ajuda a formar outro som.</div>
+<div class="note"><b>História:</b> observe título, personagens, lugar, problema e final.</div>
+<div class="note"><b>Tirinha:</b> usa quadrinhos, falas e humor.</div>
+<div class="note"><b>C:</b> CA/CO/CU = som de K. CE/CI = som de S.</div>
+</div>
+</section>
+</div>
+
+<script>
+const quiz5=[
+{q:"Qual era o “enfeite” no nome Nathália?",a:"A letra H",o:["A letra N","A letra H","O acento agudo","A letra L"]},
+{q:"Por que Nathália foi visitar tia Nininha?",a:"Para contar que já sabia ler",o:["Para contar que já sabia ler","Para tomar banho","Para comprar um guarda-chuva","Para dormir"]},
+{q:"Em qual palavra o H não tem som?",a:"hotel",o:["hotel","ninho","galho","chuva"]},
+{q:"Qual grupo mostra encontros com H?",a:"CH, LH e NH",o:["CH, LH e NH","BH, TH e WH","HH, RH e SH","BR, CR e PR"]},
+{q:"No texto do guarda-chuva, o “xixi” era:",a:"A água da chuva",o:["A água da chuva","Um brinquedo","Uma tinta","Uma comida"]},
+{q:"A palavra “apertado”, no texto, quer dizer:",a:"Com vontade de fazer xixi",o:["Com vontade de fazer xixi","Muito pequeno","Com medo","Muito caro"]},
+{q:"Qual palavra é escrita com CH?",a:"chave",o:["chave","xícara","xadrez","xampu"]},
+{q:"Qual palavra é escrita com X?",a:"xampu",o:["xampu","chapéu","chocalho","chuva"]}
+];
+const quiz6=[
+{q:"Histórias curtinhas em quadrinhos são chamadas de:",a:"tirinhas",o:["tirinhas","receitas","bilhetes","cartas"]},
+{q:"Na tirinha do Calvin, por que a cena é engraçada?",a:"Porque Calvin reclama de tudo",o:["Porque Calvin reclama de tudo","Porque ele está dormindo","Porque ele perdeu o sapato","Porque está chovendo"]},
+{q:"Na palavra CALVIN, a letra C tem som de:",a:"K",o:["K","S","CH","X"]},
+{q:"Na palavra CELULAR, a letra C tem som de:",a:"S",o:["S","K","X","CH"]},
+{q:"Quando C vem antes de A, O ou U, geralmente tem som de:",a:"K",o:["K","S","Z","R"]},
+{q:"Quando C vem antes de E ou I, geralmente tem som de:",a:"S",o:["S","K","R","X"]},
+{q:"Qual palavra tem C com som de S?",a:"cidade",o:["cidade","cavalo","copo","cama"]},
+{q:"Qual palavra tem C com som de K?",a:"cama",o:["cama","cinema","cebola","cidade"]}
+];
+const vfItems=[
+{t:"O H pode aparecer em NH, LH e CH.",a:true},
+{t:"Em hotel, o H tem som forte.",a:false},
+{t:"Tirinha é uma história curta em quadrinhos.",a:true},
+{t:"O C em cidade tem som de K.",a:false},
+{t:"O C em cavalo tem som de K.",a:true},
+{t:"Um texto pode ter título, personagens e problema.",a:true}
+];
+
+let score=0,done=0;
+const total=quiz5.length+quiz6.length+vfItems.length+4;
+document.getElementById("total").textContent=total;
+const answered=new Set();
+
+function shuffle(a){return[...a].sort(()=>Math.random()-0.5)}
+
+function renderQuiz(list,id,prefix){
+ const box=document.getElementById(id);
+ list.forEach((item,i)=>{
+  const div=document.createElement("div"); div.className="card "+(prefix==="q6"?"cap6":"");
+  div.innerHTML=`<div class="question">${i+1}. ${item.q}</div><div class="options"></div><div class="feedback"></div>`;
+  const opts=div.querySelector(".options");
+  shuffle(item.o).forEach(opt=>{
+   const b=document.createElement("button"); b.textContent=opt;
+   b.onclick=()=>answer(prefix+i,opt,item.a,b,opts,div);
+   opts.appendChild(b);
+  });
+  box.appendChild(div);
+ });
+}
+
+function answer(key,opt,right,btn,opts,div){
+ if(answered.has(key))return;
+ answered.add(key); done++;
+ const fb=div.querySelector(".feedback");
+ if(opt===right){
+  score++; btn.classList.add("correct"); fb.textContent="✅ Acertou!"; fb.className="feedback ok";
+ }else{
+  btn.classList.add("wrong");
+  [...opts.children].forEach(x=>{if(x.textContent===right)x.classList.add("correct")});
+  fb.textContent="❌ Errou. Tente lembrar da regra."; fb.className="feedback bad";
+ }
+ fb.style.display="block"; update();
+}
+
+function renderVF(){
+ const box=document.getElementById("vf");
+ vfItems.forEach((item,i)=>{
+  const div=document.createElement("div"); div.className="row truefalse";
+  div.innerHTML=`<div class="question">${i+1}. ${item.t}</div>`;
+  const v=document.createElement("button"); v.textContent="Verdadeiro";
+  const f=document.createElement("button"); f.textContent="Falso";
+  const fb=document.createElement("div"); fb.className="feedback";
+  v.onclick=()=>answerVF("vf"+i,true,item.a,v,f,fb);
+  f.onclick=()=>answerVF("vf"+i,false,item.a,f,v,fb);
+  div.appendChild(v); div.appendChild(f); div.appendChild(fb); box.appendChild(div);
+ });
+}
+
+function answerVF(key,opt,right,btn,other,fb){
+ if(answered.has(key))return;
+ answered.add(key); done++;
+ if(opt===right){score++;btn.classList.add("correct");fb.textContent="✅ Certo!";fb.className="feedback ok";}
+ else{btn.classList.add("wrong");other.classList.add("correct");fb.textContent="❌ Errou.";fb.className="feedback bad";}
+ fb.style.display="block"; update();
+}
+
+function norm(s){
+ return (s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[!.,;:?]/g,"").replace(/\s+/g," ").trim();
+}
+
+function checkGroup(group,fbId){
+ if(answered.has(group))return;
+ const els=document.querySelectorAll(`[data-group="${group}"]`);
+ let ok=0;
+ els.forEach(e=>{
+  if(norm(e.value)===norm(e.dataset.answer)){ok++;e.style.borderColor="#2e7d32";e.style.background="#e8f5e9"}
+  else{e.style.borderColor="#c62828";e.style.background="#ffebee"}
+ });
+ answered.add(group);done++;
+ const fb=document.getElementById(fbId);
+ if(ok===els.length){score++;fb.textContent="✅ Tudo certo!";fb.className="feedback ok"}
+ else{fb.textContent="❌ Revise os campos em vermelho.";fb.className="feedback bad"}
+ fb.style.display="block"; update();
+}
+
+function checkShort(){
+ if(answered.has("short"))return;
+ const r1=norm(document.getElementById("r1").value);
+ const r2=norm(document.getElementById("r2").value);
+ const ok1=r1.length>=5;
+ const temCH=r2.includes("ch");
+ const temX=r2.includes("x");
+ answered.add("short");done++;
+ const fb=document.getElementById("shortFb");
+ if(ok1 && temCH && temX){score++;fb.textContent="✅ Muito bem nas respostas curtas!";fb.className="feedback ok"}
+ else{fb.textContent="❌ Escreva um título e uma frase que tenha uma palavra com CH e uma com X.";fb.className="feedback bad"}
+ fb.style.display="block"; update();
+}
+
+function update(){
+ document.getElementById("score").textContent=score;
+ document.getElementById("done").textContent=done;
+ const erros=done-score;
+ const nota=total?Math.round(score/total*100):0;
+ const aproveitamento=done?Math.round(score/done*100):0;
+ document.getElementById("nota").textContent=nota;
+ document.getElementById("bar").style.width=nota+"%";
+ let medalha="🌟 Comece a responder para ver sua nota subir automaticamente.";
+ if(done===total){
+  if(nota>=90)medalha="🥇 Excelente! Você está pronta para a prova!";
+  else if(nota>=75)medalha="🥈 Muito bem! Revise só os errinhos.";
+  else if(nota>=60)medalha="🥉 Bom trabalho! Continue treinando.";
+  else medalha="📚 Vamos estudar mais um pouco e tentar novamente.";
+ }
+ document.getElementById("final").innerHTML=`${medalha}<br><br>⭐ Acertos: <b>${score}</b><br>❌ Erros: <b>${erros}</b><br>📌 Respondidas: <b>${done}</b> de <b>${total}</b><br>📊 Nota final até agora: <b>${nota}/100</b><br>🎯 Aproveitamento das respondidas: <b>${aproveitamento}%</b>`;
+}
+
+renderQuiz(quiz5,"quiz5","q5");
+renderVF();
+renderQuiz(quiz6,"quiz6","q6");
+update();
+</script>
+</body>
+</html>
