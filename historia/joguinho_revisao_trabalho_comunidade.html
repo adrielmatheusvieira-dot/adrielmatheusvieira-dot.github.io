@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Revisão Divertida - O Trabalho na Comunidade</title>
+<style>
+:root{
+  --blue:#1565c0;--green:#2e7d32;--orange:#ef6c00;--purple:#6a1b9a;--red:#c62828;
+  --yellow:#fff3cd;--bg:#f6fbff;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;padding:16px;font-family:Arial, sans-serif;
+  background:linear-gradient(135deg,#e3f2fd,#fffde7,#f3e5f5);
+  color:#263238;
+}
+.wrap{max-width:980px;margin:auto}
+header{
+  background:white;border:4px solid var(--blue);border-radius:24px;padding:18px;
+  text-align:center;box-shadow:0 5px 12px #0002;margin-bottom:16px;
+}
+h1{margin:0;color:var(--blue);font-size:2rem}
+.subtitle{font-size:1.1rem;margin-top:8px}
+.scorebar{
+  position:sticky;top:0;z-index:10;background:#ffffffee;border:3px solid var(--purple);
+  border-radius:18px;padding:10px;margin:14px 0;display:flex;gap:10px;flex-wrap:wrap;
+  justify-content:space-between;align-items:center;box-shadow:0 3px 8px #0002;
+}
+.badge{font-weight:bold;background:#ede7f6;color:var(--purple);border-radius:999px;padding:8px 12px}
+.card{
+  background:white;border:3px solid #90caf9;border-radius:22px;padding:16px;margin:14px 0;
+  box-shadow:0 4px 10px #0001;
+}
+.card h2{margin-top:0;color:var(--purple)}
+.options{display:grid;gap:10px}
+button.option, .smallbtn{
+  border:2px solid #90caf9;background:#f7fbff;border-radius:14px;padding:12px;
+  font-size:1rem;text-align:left;cursor:pointer;transition:.15s;
+}
+button.option:hover,.smallbtn:hover{transform:scale(1.01);background:#e3f2fd}
+button.correct{background:#c8e6c9!important;border-color:var(--green)!important}
+button.wrong{background:#ffcdd2!important;border-color:var(--red)!important}
+.feedback{margin-top:10px;font-weight:bold;min-height:24px}
+.good{color:var(--green)}.bad{color:var(--red)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.dropzone{
+  min-height:64px;border:3px dashed #aaa;border-radius:16px;padding:10px;background:#fafafa;
+}
+.drag{
+  display:inline-block;background:#fff8e1;border:2px solid var(--orange);border-radius:999px;
+  padding:8px 12px;margin:5px;cursor:grab;font-weight:bold;
+}
+.word{
+  display:inline-block;margin:5px;padding:8px 10px;border-radius:10px;border:2px solid #ddd;background:#fff;
+  cursor:pointer;font-weight:bold;
+}
+.word.selected{background:#c8e6c9;border-color:var(--green)}
+input[type=text]{
+  width:100%;padding:12px;border:2px solid #90caf9;border-radius:12px;font-size:1rem;
+}
+.center{text-align:center}
+.final{
+  display:none;background:#fff;border:4px solid var(--green);border-radius:24px;padding:20px;text-align:center;
+  margin:20px 0;box-shadow:0 5px 12px #0002;
+}
+.star{font-size:2rem}
+.tip{
+  background:var(--yellow);border-left:8px solid var(--orange);padding:10px;border-radius:10px;margin-top:10px;
+}
+.matchrow{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:center;margin:8px 0}
+select{padding:10px;border-radius:12px;border:2px solid #90caf9;font-size:1rem;width:100%}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>🛠️ Revisão Divertida: O Trabalho na Comunidade</h1>
+  <div class="subtitle">Ajude a Cecília a salvar a cidade do “Capitão Bagunça”! 🦸‍♀️</div>
+</header>
+
+<div class="scorebar">
+  <div class="badge">⭐ Pontos: <span id="score">0</span></div>
+  <div class="badge">✅ Acertos: <span id="hits">0</span></div>
+  <div class="badge">🎯 Missão: valorizar todos os trabalhos!</div>
+</div>
+
+<div class="card">
+  <h2>1) Aquecimento: o que é trabalho?</h2>
+  <p>Cecília encontrou um bilhete misterioso: “Trabalho é...” Complete escolhendo a melhor resposta.</p>
+  <div class="options" data-q="q1">
+    <button class="option" onclick="answer(this,true,'q1','Isso! Trabalho é uma atividade feita para transformar, fazer ou obter algo. 🎉')">Toda atividade que as pessoas fazem para transformar, fazer ou obter algo.</button>
+    <button class="option" onclick="answer(this,false,'q1','Quase! Passear pode ser legal, mas nem todo passeio é trabalho. 🚲')">Só passear de bicicleta no parque.</button>
+    <button class="option" onclick="answer(this,false,'q1','Ops! Dormir é importante, mas não é trabalho. 😴')">Dormir até tarde e sonhar com pizza.</button>
+  </div>
+  <div id="fb-q1" class="feedback"></div>
+</div>
+
+<div class="card">
+  <h2>2) Remunerado ou não remunerado?</h2>
+  <p>Marque a alternativa correta: quando uma pessoa recebe dinheiro pelo serviço, isso se chama...</p>
+  <div class="options" data-q="q2">
+    <button class="option" onclick="answer(this,false,'q2','Ainda não. Gratidão é importante, mas aqui falamos de pagamento. 🙏')">Agradecimento.</button>
+    <button class="option" onclick="answer(this,true,'q2','Perfeito! Remuneração é pagamento em dinheiro por produto ou serviço. 💰')">Remuneração.</button>
+    <button class="option" onclick="answer(this,false,'q2','Boa tentativa, mas recreação é diversão. 🎳')">Recreação.</button>
+  </div>
+  <div id="fb-q2" class="feedback"></div>
+</div>
+
+<div class="card">
+  <h2>3) Remunerado ou pode não ser remunerado?</h2>
+  <p>Ajude a Cecília a separar os trabalhos sem arrastar nada: escolha a opção correta em cada linha.</p>
+
+  <div class="matchrow">
+    <strong>💇‍♀️ Cabeleireira</strong>
+    <select id="r1">
+      <option value="">Escolha...</option>
+      <option value="remunerado">Remunerado</option>
+      <option value="nao">Pode não ser remunerado</option>
+    </select>
+  </div>
+
+  <div class="matchrow">
+    <strong>🍲 Preparar comida em casa</strong>
+    <select id="r2">
+      <option value="">Escolha...</option>
+      <option value="remunerado">Remunerado</option>
+      <option value="nao">Pode não ser remunerado</option>
+    </select>
+  </div>
+
+  <div class="matchrow">
+    <strong>🔬 Cientista fazendo pesquisa</strong>
+    <select id="r3">
+      <option value="">Escolha...</option>
+      <option value="remunerado">Remunerado</option>
+      <option value="nao">Pode não ser remunerado</option>
+    </select>
+  </div>
+
+  <div class="matchrow">
+    <strong>🧹 Limpar a casa</strong>
+    <select id="r4">
+      <option value="">Escolha...</option>
+      <option value="remunerado">Remunerado</option>
+      <option value="nao">Pode não ser remunerado</option>
+    </select>
+  </div>
+
+  <button class="smallbtn" onclick="checkRemunerado()">Conferir missão 3</button>
+  <div id="fb-remunerado" class="feedback"></div>
+</div>
+
+<div class="card">
+  <h2>4) Quem oferece esse serviço?</h2>
+  <p>Ligue mentalmente os estabelecimentos aos serviços. Escolha a resposta certa:</p>
+  <div class="matchrow">
+    <strong>🏥 Posto de saúde</strong>
+    <select id="m1">
+      <option value="">Escolha...</option>
+      <option>Envio de cartas</option>
+      <option>Atendimento médico</option>
+      <option>Exercícios físicos</option>
+    </select>
+  </div>
+  <div class="matchrow">
+    <strong>📮 Correios</strong>
+    <select id="m2">
+      <option value="">Escolha...</option>
+      <option>Envio de cartas</option>
+      <option>Atendimento médico</option>
+      <option>Exercícios físicos</option>
+    </select>
+  </div>
+  <div class="matchrow">
+    <strong>🏋️ Academia</strong>
+    <select id="m3">
+      <option value="">Escolha...</option>
+      <option>Envio de cartas</option>
+      <option>Atendimento médico</option>
+      <option>Exercícios físicos</option>
+    </select>
+  </div>
+  <button class="smallbtn" onclick="checkMatch()">Conferir missão 4</button>
+  <div id="fb-match" class="feedback"></div>
+</div>
+
+<div class="card">
+  <h2>5) O caminho do café da manhã</h2>
+  <p>O cereal e o leite não aparecem por mágica na mesa da Cecília. Qual sequência faz mais sentido?</p>
+  <div class="options" data-q="q5">
+    <button class="option" onclick="answer(this,true,'q5','Isso! Muitas pessoas trabalham até o alimento chegar em casa. 🥛🚚')">Campo/produção → indústria → transporte → mercado → casa.</button>
+    <button class="option" onclick="answer(this,false,'q5','Seria engraçado, mas o leite não nasce na prateleira do mercado. 😂')">Mercado → vaca → indústria → campo → casa.</button>
+    <button class="option" onclick="answer(this,false,'q5','Ops! Antes de comer, alguém precisou produzir, transportar e vender. 🍽️')">Casa → prato → mercado → caminhão.</button>
+  </div>
+  <div id="fb-q5" class="feedback"></div>
+</div>
+
+<div class="card">
+  <h2>6) Caça-palavras relâmpago</h2>
+  <p>Clique nas atitudes que <strong>valorizam</strong> o trabalho da comunidade:</p>
+  <div id="words">
+    <span class="word" data-good="true">Ser grato</span>
+    <span class="word" data-good="false">Jogar lixo no chão</span>
+    <span class="word" data-good="true">Manter a limpeza</span>
+    <span class="word" data-good="false">Pichar muros</span>
+    <span class="word" data-good="true">Cuidar dos canteiros</span>
+    <span class="word" data-good="false">Destruir gramados</span>
+  </div>
+  <button class="smallbtn" onclick="checkWords()">Conferir missão 6</button>
+  <div id="fb-words" class="feedback"></div>
+</div>
+
+<div class="card">
+  <h2>7) Pergunta da Cecília 🧠</h2>
+  <p>O gari e o coletor de lixo são importantes porque...</p>
+  <div class="options" data-q="q7">
+    <button class="option" onclick="answer(this,true,'q7','Muito bem! Eles ajudam a manter a comunidade limpa e saudável. 🧹')">Mantêm as ruas limpas e ajudam a cuidar da saúde da comunidade.</button>
+    <button class="option" onclick="answer(this,false,'q7','Não! Eles são muito importantes. Sem eles, a cidade vira “Reino do Lixão”. 🦝')">Não fazem diferença.</button>
+    <button class="option" onclick="answer(this,false,'q7','Essa seria missão de mágico! O trabalho deles é cuidar da limpeza. ✨')">Transformam lixo em sorvete.</button>
+  </div>
+  <div id="fb-q7" class="feedback"></div>
+</div>
+
+<div class="card">
+  <h2>8) Trabalho braçal também usa a cabeça?</h2>
+  <p>Um pedreiro precisa saber...</p>
+  <div class="options" data-q="q8">
+    <button class="option" onclick="answer(this,false,'q8','Dançar ajuda na alegria, mas a resposta da matéria é outra. 💃')">Apenas dançar muito bem.</button>
+    <button class="option" onclick="answer(this,true,'q8','Correto! Ele usa cálculo, preparo de argamassa/concreto e técnica. 🧱')">Cálculos, preparo de argamassa e concreto.</button>
+    <button class="option" onclick="answer(this,false,'q8','Hmm... isso parece mais tarefa de jardineiro. 🌱')">Somente cuidar de flores.</button>
+  </div>
+  <div id="fb-q8" class="feedback"></div>
+</div>
+
+<div class="card">
+  <h2>9) Complete a frase mágica</h2>
+  <p>Digite as palavras que faltam:</p>
+  <p><strong>O ________ de cada um faz a ____________ melhor.</strong></p>
+  <input type="text" id="complete" placeholder="Digite aqui..." />
+  <button class="smallbtn" onclick="checkComplete()">Conferir frase</button>
+  <div id="fb-complete" class="feedback"></div>
+</div>
+
+<div class="card">
+  <h2>10) Chefona final: Capitão Bagunça 🦹‍♂️</h2>
+  <p>O Capitão Bagunça jogou lixo no chão, pisou no canteiro e pichou o muro. O que Cecília deve dizer?</p>
+  <div class="options" data-q="q10">
+    <button class="option" onclick="answer(this,true,'q10','Cecília venceu! Valorizar o trabalho da comunidade é cuidar dos espaços e agradecer. 🏆')">“Precisamos cuidar da comunidade, jogar lixo na lixeira e respeitar o trabalho das pessoas.”</button>
+    <button class="option" onclick="answer(this,false,'q10','Ih, assim o Capitão Bagunça ganha! 😬')">“Pode deixar tudo bagunçado mesmo.”</button>
+    <button class="option" onclick="answer(this,false,'q10','Boa tentativa, mas comer brigadeiro não resolve a praça suja. 🍫')">“Vamos resolver comendo brigadeiro.”</button>
+  </div>
+  <div id="fb-q10" class="feedback"></div>
+</div>
+
+<div class="center">
+  <button class="smallbtn" onclick="finishGame()" style="font-size:1.2rem;background:#e8f5e9;border-color:var(--green)">🏁 Finalizar e ver pontuação</button>
+</div>
+
+<div id="final" class="final">
+  <div class="star">🌟🌟🌟</div>
+  <h2>Resultado da Cecília</h2>
+  <p id="finalText"></p>
+  <div class="tip"><strong>Dica:</strong> revise os erros e depois jogue de novo. O Capitão Bagunça não tira férias! 😄</div>
+</div>
+</div>
+
+<script>
+let score=0, hits=0;
+const done = new Set();
+
+function addPoints(key, pts=10){
+  if(!done.has(key)){
+    done.add(key);
+    score += pts; hits += 1;
+    document.getElementById('score').textContent=score;
+    document.getElementById('hits').textContent=hits;
+  }
+}
+function answer(btn, ok, q, msg){
+  const box = btn.parentElement;
+  if(done.has(q)){return}
+  [...box.querySelectorAll('button')].forEach(b=>b.disabled=true);
+  if(ok){btn.classList.add('correct'); addPoints(q);}
+  else{btn.classList.add('wrong');}
+  const fb=document.getElementById('fb-'+q);
+  fb.textContent=msg;
+  fb.className='feedback '+(ok?'good':'bad');
+}
+
+function checkRemunerado(){
+  const ok = document.getElementById('r1').value==='remunerado' &&
+             document.getElementById('r2').value==='nao' &&
+             document.getElementById('r3').value==='remunerado' &&
+             document.getElementById('r4').value==='nao';
+  const fb=document.getElementById('fb-remunerado');
+  if(ok){
+    addPoints('remunerado');
+    fb.textContent='Missão cumprida! Cecília separou tudo sem precisar arrastar nada. 🥳';
+    fb.className='feedback good';
+  }else{
+    fb.textContent='Quase! Dica: cabeleireira e cientista costumam receber pagamento; preparar comida e limpar a própria casa podem não ser remunerados.';
+    fb.className='feedback bad';
+  }
+}
+function checkMatch(){
+  const ok = document.getElementById('m1').value==='Atendimento médico' &&
+             document.getElementById('m2').value==='Envio de cartas' &&
+             document.getElementById('m3').value==='Exercícios físicos';
+  const fb=document.getElementById('fb-match');
+  if(ok){addPoints('match'); fb.textContent='Perfeito! Estabelecimentos ligados aos serviços certos. 📮🏥🏋️'; fb.className='feedback good'}
+  else{fb.textContent='Ops! Confira: posto de saúde cuida da saúde, Correios enviam cartas e academia faz exercícios.'; fb.className='feedback bad'}
+}
+document.querySelectorAll('.word').forEach(w=>w.onclick=()=>w.classList.toggle('selected'));
+function checkWords(){
+  let ok=true;
+  document.querySelectorAll('.word').forEach(w=>{
+    const selected=w.classList.contains('selected');
+    const good=w.dataset.good==='true';
+    if(selected!==good) ok=false;
+  });
+  const fb=document.getElementById('fb-words');
+  if(ok){addPoints('words'); fb.textContent='Show! Você escolheu as atitudes que valorizam a comunidade. 🌈'; fb.className='feedback good'}
+  else{fb.textContent='Ainda tem atitude bagunceira selecionada ou faltou uma boa atitude.'; fb.className='feedback bad'}
+}
+function normalize(t){
+  return t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g," ").trim();
+}
+function checkComplete(){
+  const val=normalize(document.getElementById('complete').value);
+  const fb=document.getElementById('fb-complete');
+  const ok = val.includes('trabalho') && (val.includes('comunidade') || val.includes('cidade'));
+  if(ok){addPoints('complete'); fb.textContent='Frase poderosa! O trabalho de cada um faz a comunidade melhor. 💪'; fb.className='feedback good'}
+  else{fb.textContent='Dica: as palavras são “trabalho” e “comunidade”.'; fb.className='feedback bad'}
+}
+function finishGame(){
+  const f=document.getElementById('final');
+  const text=document.getElementById('finalText');
+  f.style.display='block';
+  let msg='';
+  if(score>=90) msg='Pontuação: '+score+' pontos. Cecília virou Mestra da Comunidade! 🏆';
+  else if(score>=60) msg='Pontuação: '+score+' pontos. Muito bom! Só falta revisar alguns detalhes. ⭐';
+  else msg='Pontuação: '+score+' pontos. Bora revisar e jogar de novo para derrotar o Capitão Bagunça! 💪';
+  text.textContent=msg;
+  f.scrollIntoView({behavior:'smooth'});
+}
+</script>
+</body>
+</html>
