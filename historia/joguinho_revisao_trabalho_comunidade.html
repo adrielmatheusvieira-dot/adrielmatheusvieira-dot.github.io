@@ -1,0 +1,121 @@
+from pathlib import Path
+
+old_path = Path('/mnt/data/joguinho_revisao_historia_trabalho_comunidade.html')
+html = old_path.read_text(encoding='utf-8')
+
+old_block = r'''<div class="card">
+  <h2>3) Arraste para o lugar certo</h2>
+  <p>Coloque cada trabalho no grupo correto. Dica: nem todo trabalho recebe dinheiro, mas todos podem ser importantes!</p>
+  <div>
+    <span class="drag" draggable="true" data-type="remunerado">Cabeleireira</span>
+    <span class="drag" draggable="true" data-type="nao">Preparar comida em casa</span>
+    <span class="drag" draggable="true" data-type="remunerado">Cientista</span>
+    <span class="drag" draggable="true" data-type="nao">Limpar a casa</span>
+  </div>
+  <div class="grid2">
+    <div>
+      <h3>💰 Remunerado</h3>
+      <div class="dropzone" data-accept="remunerado"></div>
+    </div>
+    <div>
+      <h3>🏠 Pode não ser remunerado</h3>
+      <div class="dropzone" data-accept="nao"></div>
+    </div>
+  </div>
+  <button class="smallbtn" onclick="checkDrag()">Conferir missão 3</button>
+  <div id="fb-drag" class="feedback"></div>
+</div>'''
+
+new_block = r'''<div class="card">
+  <h2>3) Remunerado ou pode não ser remunerado?</h2>
+  <p>Ajude a Cecília a separar os trabalhos sem arrastar nada: escolha a opção correta em cada linha.</p>
+
+  <div class="matchrow">
+    <strong>💇‍♀️ Cabeleireira</strong>
+    <select id="r1">
+      <option value="">Escolha...</option>
+      <option value="remunerado">Remunerado</option>
+      <option value="nao">Pode não ser remunerado</option>
+    </select>
+  </div>
+
+  <div class="matchrow">
+    <strong>🍲 Preparar comida em casa</strong>
+    <select id="r2">
+      <option value="">Escolha...</option>
+      <option value="remunerado">Remunerado</option>
+      <option value="nao">Pode não ser remunerado</option>
+    </select>
+  </div>
+
+  <div class="matchrow">
+    <strong>🔬 Cientista fazendo pesquisa</strong>
+    <select id="r3">
+      <option value="">Escolha...</option>
+      <option value="remunerado">Remunerado</option>
+      <option value="nao">Pode não ser remunerado</option>
+    </select>
+  </div>
+
+  <div class="matchrow">
+    <strong>🧹 Limpar a casa</strong>
+    <select id="r4">
+      <option value="">Escolha...</option>
+      <option value="remunerado">Remunerado</option>
+      <option value="nao">Pode não ser remunerado</option>
+    </select>
+  </div>
+
+  <button class="smallbtn" onclick="checkRemunerado()">Conferir missão 3</button>
+  <div id="fb-remunerado" class="feedback"></div>
+</div>'''
+
+html = html.replace(old_block, new_block)
+
+old_js = r'''let dragged=null;
+document.querySelectorAll('.drag').forEach(el=>{
+  el.addEventListener('dragstart',()=>dragged=el);
+});
+document.querySelectorAll('.dropzone').forEach(zone=>{
+  zone.addEventListener('dragover',e=>e.preventDefault());
+  zone.addEventListener('drop',e=>{
+    e.preventDefault();
+    if(dragged){ zone.appendChild(dragged); dragged=null; }
+  });
+});
+function checkDrag(){
+  let ok=true;
+  document.querySelectorAll('.dropzone').forEach(zone=>{
+    const accept=zone.dataset.accept;
+    zone.querySelectorAll('.drag').forEach(item=>{
+      if(item.dataset.type!==accept) ok=false;
+    });
+  });
+  const total=[...document.querySelectorAll('.dropzone .drag')].length;
+  const fb=document.getElementById('fb-drag');
+  if(ok && total===4){addPoints('drag'); fb.textContent='Missão cumprida! Você separou os trabalhos direitinho. 🥳'; fb.className='feedback good'}
+  else{fb.textContent='Quase! Veja se algum trabalho caiu no grupo errado.'; fb.className='feedback bad'}
+}'''
+
+new_js = r'''function checkRemunerado(){
+  const ok = document.getElementById('r1').value==='remunerado' &&
+             document.getElementById('r2').value==='nao' &&
+             document.getElementById('r3').value==='remunerado' &&
+             document.getElementById('r4').value==='nao';
+  const fb=document.getElementById('fb-remunerado');
+  if(ok){
+    addPoints('remunerado');
+    fb.textContent='Missão cumprida! Cecília separou tudo sem precisar arrastar nada. 🥳';
+    fb.className='feedback good';
+  }else{
+    fb.textContent='Quase! Dica: cabeleireira e cientista costumam receber pagamento; preparar comida e limpar a própria casa podem não ser remunerados.';
+    fb.className='feedback bad';
+  }
+}'''
+
+html = html.replace(old_js, new_js)
+
+# Remove unused drag/drop styles? not necessary, but can leave.
+new_path = Path('/mnt/data/joguinho_revisao_historia_trabalho_comunidade_v2.html')
+new_path.write_text(html, encoding='utf-8')
+new_path
