@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Geografia - Capítulos 7 e 8</title>
+  <style>
+    :root{
+      --bg:#f6f8fb;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --ok:#166534;
+      --bad:#991b1b;
+      --accent:#2563eb;
+      --accent2:#7c3aed;
+      --line:#e5e7eb;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:linear-gradient(180deg,#eef4ff,#f8fafc);
+      color:var(--text);
+    }
+    .wrap{
+      max-width:760px;
+      margin:0 auto;
+      padding:20px;
+    }
+    .hero{
+      background:linear-gradient(135deg,#2563eb,#7c3aed);
+      color:#fff;
+      padding:24px;
+      border-radius:22px;
+      box-shadow:0 12px 30px rgba(37,99,235,.18);
+      margin-bottom:18px;
+    }
+    .hero h1{margin:0 0 8px;font-size:28px}
+    .hero p{margin:0;opacity:.95}
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:20px;
+      box-shadow:0 8px 24px rgba(15,23,42,.06);
+    }
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:center;
+      margin-bottom:14px;
+      flex-wrap:wrap;
+    }
+    .badge{
+      background:#eff6ff;
+      color:#1d4ed8;
+      padding:7px 10px;
+      border-radius:999px;
+      font-size:14px;
+      font-weight:700;
+    }
+    .progress{
+      height:10px;
+      background:#eef2f7;
+      border-radius:999px;
+      overflow:hidden;
+      margin:14px 0 20px;
+    }
+    .progress > div{
+      height:100%;
+      width:0;
+      background:linear-gradient(90deg,#2563eb,#7c3aed);
+      transition:.25s ease;
+    }
+    h2{
+      margin:0 0 18px;
+      font-size:24px;
+      line-height:1.25;
+    }
+    .answers{
+      display:grid;
+      gap:12px;
+    }
+    button.answer{
+      width:100%;
+      text-align:left;
+      border:2px solid #e5e7eb;
+      background:#fff;
+      padding:14px 16px;
+      border-radius:14px;
+      font-size:17px;
+      cursor:pointer;
+      transition:.18s ease;
+    }
+    button.answer:hover{border-color:#93c5fd;background:#f8fbff}
+    button.answer:disabled{cursor:default;opacity:1}
+    button.answer.correct{border-color:#22c55e;background:#f0fdf4}
+    button.answer.wrong{border-color:#ef4444;background:#fef2f2}
+    .feedback{
+      margin-top:16px;
+      padding:14px;
+      border-radius:14px;
+      display:none;
+      font-size:16px;
+      line-height:1.45;
+    }
+    .feedback.ok{display:block;background:#f0fdf4;color:var(--ok);border:1px solid #bbf7d0}
+    .feedback.bad{display:block;background:#fef2f2;color:var(--bad);border:1px solid #fecaca}
+    .next{
+      margin-top:16px;
+      display:none;
+      width:100%;
+      border:0;
+      background:#111827;
+      color:#fff;
+      padding:14px 16px;
+      border-radius:14px;
+      font-size:17px;
+      font-weight:700;
+      cursor:pointer;
+    }
+    .start{
+      width:100%;
+      border:0;
+      background:#111827;
+      color:#fff;
+      padding:15px 16px;
+      border-radius:14px;
+      font-size:17px;
+      font-weight:700;
+      cursor:pointer;
+    }
+    .center{text-align:center}
+    .score{
+      font-size:56px;
+      font-weight:800;
+      margin:6px 0 12px;
+    }
+    .small{color:var(--muted);font-size:14px}
+    .hidden{display:none}
+    .footer-note{
+      margin-top:14px;
+      color:var(--muted);
+      font-size:13px;
+      text-align:center;
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <h1>🌎 Jogo de Geografia</h1>
+    <p>Capítulos 7 e 8 — Recursos naturais, extrativismo e solo</p>
+  </section>
+
+  <section class="card" id="startScreen">
+    <div class="center">
+      <h2>Pronta para começar?</h2>
+      <p>O jogo tem 20 perguntas. Cada resposta vale 1 ponto.</p>
+      <p class="small">Você recebe o resultado na hora e pode tentar novamente no final.</p>
+      <button class="start" onclick="startGame()">Começar o jogo</button>
+    </div>
+  </section>
+
+  <section class="card hidden" id="gameScreen">
+    <div class="topbar">
+      <span class="badge" id="counter">Pergunta 1 de 20</span>
+      <span class="badge" id="scoreBadge">⭐ 0 ponto</span>
+    </div>
+    <div class="progress"><div id="progressBar"></div></div>
+    <h2 id="question"></h2>
+    <div class="answers" id="answers"></div>
+    <div class="feedback" id="feedback"></div>
+    <button class="next" id="nextBtn" onclick="nextQuestion()">Próxima</button>
+  </section>
+
+  <section class="card hidden" id="endScreen">
+    <div class="center">
+      <h2>Fim do jogo! 🎉</h2>
+      <div class="score" id="finalScore">0/20</div>
+      <p id="finalMessage"></p>
+      <button class="start" onclick="restartGame()">Jogar novamente</button>
+    </div>
+  </section>
+
+  <div class="footer-note">Conteúdo baseado nos capítulos 7 e 8 da apostila de Geografia.</div>
+</div>
+
+<script>
+const questions = [
+  {
+    q:"O que é um recurso natural?",
+    a:["Tudo o que buscamos na natureza para atender nossas necessidades","Somente coisas compradas em lojas","Apenas plantas e animais","Somente objetos feitos em fábricas"],
+    c:0,
+    e:"Recurso natural é tudo aquilo que obtemos da natureza para atender às nossas necessidades."
+  },
+  {
+    q:"Qual destes é um recurso vegetal?",
+    a:["Algodão","Ferro","Sal","Petróleo"],
+    c:0,
+    e:"O algodão vem de uma planta, por isso é um recurso vegetal."
+  },
+  {
+    q:"Qual destes é um recurso animal?",
+    a:["Mel","Areia","Granito","Petróleo"],
+    c:0,
+    e:"O mel é produzido pelas abelhas, então é de origem animal."
+  },
+  {
+    q:"Qual destes é um recurso mineral?",
+    a:["Sal","Leite","Madeira","Algodão"],
+    c:0,
+    e:"O sal é um recurso mineral."
+  },
+  {
+    q:"Na fabricação de uma camiseta de algodão, o processo começa com...",
+    a:["O plantio da semente de algodão","A costura da camiseta","O tingimento do tecido","A venda na loja"],
+    c:0,
+    e:"A sequência começa no campo, com a semente de algodão sendo plantada."
+  },
+  {
+    q:"Qual destes é um recurso renovável?",
+    a:["Vento","Petróleo","Ouro","Carvão mineral"],
+    c:0,
+    e:"O vento se renova naturalmente."
+  },
+  {
+    q:"Qual destes é um recurso não renovável?",
+    a:["Petróleo","Luz solar","Vento","Água"],
+    c:0,
+    e:"O petróleo demora muito tempo para se formar e pode se esgotar."
+  },
+  {
+    q:"O que é atividade extrativista?",
+    a:["Retirar recursos diretamente da natureza","Construir prédios","Comprar alimentos no mercado","Plantar flores em vasos"],
+    c:0,
+    e:"Extrativismo é retirar algo da natureza."
+  },
+  {
+    q:"A pesca é um exemplo de extrativismo...",
+    a:["Animal","Vegetal","Mineral","Urbano"],
+    c:0,
+    e:"Na pesca, o recurso retirado da natureza é um animal."
+  },
+  {
+    q:"A extração de madeira é um exemplo de extrativismo...",
+    a:["Vegetal","Animal","Mineral","Industrial"],
+    c:0,
+    e:"A madeira vem de vegetais."
+  },
+  {
+    q:"A mineração de areia é um exemplo de extrativismo...",
+    a:["Mineral","Animal","Vegetal","Agrícola"],
+    c:0,
+    e:"Areia é um recurso mineral."
+  },
+  {
+    q:"Como se chama a parte que fica abaixo do solo?",
+    a:["Subsolo","Superfície","Paisagem","Vegetação"],
+    c:0,
+    e:"A região abaixo do solo é chamada de subsolo."
+  },
+  {
+    q:"Qual destes pode ser encontrado no subsolo?",
+    a:["Pedras e minerais","Nuvens","Pássaros voando","Telhados"],
+    c:0,
+    e:"No subsolo podem existir pedras, minerais, água, túneis e tubulações."
+  },
+  {
+    q:"Qual parte da planta fica em contato direto com o solo?",
+    a:["Raiz","Flor","Folha","Fruto"],
+    c:0,
+    e:"A raiz fixa a planta e fica em contato com o solo."
+  },
+  {
+    q:"Qual característica do solo indica o tamanho dos grãos?",
+    a:["Textura","Cor","Cheiro","Altura"],
+    c:0,
+    e:"A textura está relacionada ao tamanho e à sensação dos grãos do solo."
+  },
+  {
+    q:"Quando a água consegue infiltrar no solo com facilidade, dizemos que ele tem...",
+    a:["Boa porosidade e drenagem","Pouca luz","Muito sal","Alta temperatura"],
+    c:0,
+    e:"Porosidade e drenagem ajudam a água a entrar e circular pelo solo."
+  },
+  {
+    q:"Qual é uma utilidade do solo?",
+    a:["Servir de base para plantações e construções","Produzir vento","Criar nuvens","Fazer o Sol nascer"],
+    c:0,
+    e:"O solo é usado para agricultura, construções, lazer, armazenamento de água e muitas outras atividades."
+  },
+  {
+    q:"Qual destes é um problema que pode degradar o solo?",
+    a:["Erosão","Compostagem","Plantio de árvores","Infiltração da água"],
+    c:0,
+    e:"A erosão desgasta e remove partes do solo."
+  },
+  {
+    q:"O que ajuda a reduzir enchentes e manter a umidade do solo?",
+    a:["Grama e outras plantas","Cobrir tudo com cimento","Retirar todas as árvores","Jogar lixo no chão"],
+    c:0,
+    e:"Áreas com plantas permitem maior infiltração da água da chuva."
+  },
+  {
+    q:"O que é compostagem?",
+    a:["Transformar resíduos orgânicos em adubo","Queimar lixo","Jogar restos de comida no rio","Misturar vidro com plástico"],
+    c:0,
+    e:"A compostagem transforma resíduos orgânicos em material fértil para o solo."
+  }
+];
+
+let order = [];
+let current = 0;
+let score = 0;
+let locked = false;
+
+function shuffled(arr){
+  return [...arr].sort(()=>Math.random()-0.5);
+}
+
+function startGame(){
+  document.getElementById("startScreen").classList.add("hidden");
+  document.getElementById("gameScreen").classList.remove("hidden");
+  order = shuffled(questions);
+  current = 0;
+  score = 0;
+  showQuestion();
+}
+
+function showQuestion(){
+  locked = false;
+  const item = order[current];
+  document.getElementById("counter").textContent = `Pergunta ${current+1} de ${order.length}`;
+  document.getElementById("scoreBadge").textContent = `⭐ ${score} ${score===1?"ponto":"pontos"}`;
+  document.getElementById("progressBar").style.width = `${(current/order.length)*100}%`;
+  document.getElementById("question").textContent = item.q;
+
+  const answersBox = document.getElementById("answers");
+  answersBox.innerHTML = "";
+
+  const answerObjects = item.a.map((text, idx)=>({text, idx}));
+  shuffled(answerObjects).forEach(obj=>{
+    const b = document.createElement("button");
+    b.className = "answer";
+    b.textContent = obj.text;
+    b.onclick = ()=>chooseAnswer(obj.idx, b);
+    answersBox.appendChild(b);
+  });
+
+  const feedback = document.getElementById("feedback");
+  feedback.className = "feedback";
+  feedback.textContent = "";
+  document.getElementById("nextBtn").style.display = "none";
+}
+
+function chooseAnswer(index, button){
+  if(locked) return;
+  locked = true;
+  const item = order[current];
+  const all = [...document.querySelectorAll("button.answer")];
+  all.forEach(b=>b.disabled=true);
+
+  const feedback = document.getElementById("feedback");
+
+  if(index === item.c){
+    score++;
+    button.classList.add("correct");
+    feedback.className = "feedback ok";
+    feedback.innerHTML = `✅ <strong>Acertou!</strong> ${item.e}`;
+  } else {
+    button.classList.add("wrong");
+    const correctText = item.a[item.c];
+    all.forEach(b=>{
+      if(b.textContent === correctText) b.classList.add("correct");
+    });
+    feedback.className = "feedback bad";
+    feedback.innerHTML = `❌ <strong>Quase!</strong> A resposta correta é <strong>${correctText}</strong>. ${item.e}`;
+  }
+
+  document.getElementById("scoreBadge").textContent = `⭐ ${score} ${score===1?"ponto":"pontos"}`;
+  document.getElementById("nextBtn").style.display = "block";
+}
+
+function nextQuestion(){
+  current++;
+  if(current >= order.length){
+    finishGame();
+  } else {
+    showQuestion();
+  }
+}
+
+function finishGame(){
+  document.getElementById("progressBar").style.width = "100%";
+  document.getElementById("gameScreen").classList.add("hidden");
+  document.getElementById("endScreen").classList.remove("hidden");
+  document.getElementById("finalScore").textContent = `${score}/${order.length}`;
+
+  const pct = score/order.length;
+  let msg = "";
+  if(pct === 1) msg = "Excelente! Você acertou tudo! 🌟";
+  else if(pct >= .85) msg = "Muito bem! Você está dominando o conteúdo. 👏";
+  else if(pct >= .7) msg = "Bom trabalho! Vale revisar os pontos em que errou. 📚";
+  else msg = "Vamos revisar mais um pouco e tentar novamente. Você consegue! 💪";
+
+  document.getElementById("finalMessage").textContent = msg;
+}
+
+function restartGame(){
+  document.getElementById("endScreen").classList.add("hidden");
+  document.getElementById("gameScreen").classList.remove("hidden");
+  order = shuffled(questions);
+  current = 0;
+  score = 0;
+  showQuestion();
+}
+</script>
+</body>
+</html>
