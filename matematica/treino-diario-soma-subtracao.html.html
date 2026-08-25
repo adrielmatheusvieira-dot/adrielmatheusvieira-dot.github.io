@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Treino Diário de Soma e Subtração</title>
+<style>
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:linear-gradient(#eef4ff,#f8fafc);color:#1f2937}
+.wrap{max-width:780px;margin:auto;padding:18px}.hero{background:linear-gradient(135deg,#2563eb,#7c3aed);color:white;padding:24px;border-radius:24px;margin-bottom:18px}
+.card{background:white;border:1px solid #e5e7eb;border-radius:22px;padding:20px;box-shadow:0 8px 24px rgba(15,23,42,.06)}
+.hidden{display:none}.top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.badge{background:#eff6ff;color:#1d4ed8;padding:7px 10px;border-radius:999px;font-weight:800}
+.progress{height:10px;background:#eef2f7;border-radius:999px;overflow:hidden;margin:14px 0 20px}.progress div{height:100%;background:linear-gradient(90deg,#2563eb,#7c3aed)}
+.problem{background:#f8fafc;border:1px solid #e5e7eb;border-radius:18px;padding:18px;font-size:21px;line-height:1.45;margin-bottom:16px}.calc{font-size:34px;font-weight:900;text-align:center}
+.row{display:flex;gap:10px}input{flex:1;padding:15px;border:2px solid #cbd5e1;border-radius:14px;font-size:24px;text-align:center;font-weight:800}.btn{border:0;border-radius:14px;padding:15px 18px;font-size:16px;font-weight:800;background:#111827;color:#fff;cursor:pointer}.full{width:100%}
+.feedback{display:none;margin-top:16px;padding:14px;border-radius:14px}.ok{display:block;background:#f0fdf4;color:#166534}.bad{display:block;background:#fef2f2;color:#991b1b}.next{display:none;margin-top:14px}
+.center{text-align:center}.score{font-size:58px;font-weight:900}.small{color:#6b7280;font-size:14px}.review{text-align:left;margin-top:16px;background:#f8fafc;border-radius:14px;padding:14px}
+@media(max-width:620px){.row{flex-direction:column}.row .btn{width:100%}.hero h1{font-size:25px}}
+</style>
+</head><body><div class="wrap">
+<section class="hero"><h1>➕➖ Treino Diário de Matemática</h1><p>10 continhas por rodada — soma e subtração com números de 3 dígitos e com 1000.</p></section>
+
+<section class="card" id="start"><div class="center">
+<h2>Vamos praticar? 🚀</h2>
+<p>O jogo cria <strong>10 questões novas por rodada</strong>: 5 contas diretas e 5 situações do cotidiano.</p>
+<p class="small">Há números de 3 dígitos, contas com reagrupamento, subtrações com empréstimo e situações com mL, kg, idade, páginas, dinheiro e pontos.</p>
+<button class="btn full" onclick="startGame()">Começar treino</button>
+</div></section>
+
+<section class="card hidden" id="game">
+<div class="top"><span class="badge" id="counter"></span><span class="badge" id="scoreBadge"></span></div>
+<div class="progress"><div id="bar"></div></div>
+<h2 id="type"></h2><div class="problem" id="problem"></div>
+<div class="row"><input id="ans" type="number" inputmode="numeric" placeholder="Digite a resposta"><button class="btn" id="check" onclick="checkAnswer()">Conferir</button></div>
+<div class="feedback" id="fb"></div><button class="btn full next" id="next" onclick="nextQuestion()">Próxima questão</button>
+</section>
+
+<section class="card hidden" id="end"><div class="center">
+<h2>Treino concluído! 🎉</h2><div class="score" id="final"></div><p id="msg"></p>
+<div class="review" id="review"></div><button class="btn full" onclick="startGame()">Fazer mais 10 continhas</button>
+</div></section>
+</div>
+
+<script>
+const TOTAL=10;let game=[],i=0,score=0,locked=false,log=[];
+const names=['Cecília','Ana','Bruno','Lucas','Marina','Felipe','João','Lia','Pedro','Sofia'];
+function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function direct(){
+ let op=Math.random()<.5?'+':'-',a,b,r;
+ if(op==='+'){a=rand(120,899);b=rand(80,700);if(Math.random()<.35){a=rand(700,999);b=rand(1,300)}r=a+b}
+ else{a=Math.random()<.35?pick([1000,999,950,900,850,800]):rand(300,1000);b=rand(50,a);r=a-b}
+ return{type:'Conta direta',html:`<div class="calc">${a} ${op==='+'?'+':'−'} ${b} = ?</div>`,answer:r,explain:`${a} ${op==='+'?'+':'−'} ${b} = ${r}`};
+}
+function word(){
+ let k=rand(1,10),n1=pick(names),n2=pick(names.filter(x=>x!==n1)),a,b,r;
+ if(k===1){a=rand(250,750);b=rand(120,500);r=a+b;return{type:'Situação-problema',html:`${n1} tinha <b>${a} mL</b> de suco e colocou mais <b>${b} mL</b>. Quantos mililitros há agora?`,answer:r,explain:`${a} + ${b} = ${r} mL`}}
+ if(k===2){a=rand(600,1000);b=rand(100,a-50);r=a-b;return{type:'Situação-problema',html:`Uma garrafa tinha <b>${a} mL</b> de água. Foram usados <b>${b} mL</b>. Quantos mililitros sobraram?`,answer:r,explain:`${a} − ${b} = ${r} mL`}}
+ if(k===3){a=rand(120,600);b=rand(80,400);r=a+b;return{type:'Situação-problema',html:`Uma turma arrecadou <b>${a} kg</b> de alimentos e outra <b>${b} kg</b>. Quantos quilogramas foram arrecadados ao todo?`,answer:r,explain:`${a} + ${b} = ${r} kg`}}
+ if(k===4){a=rand(500,1000);b=rand(100,a-50);r=a-b;return{type:'Situação-problema',html:`Um depósito tinha <b>${a} kg</b> de ração e usou <b>${b} kg</b>. Quantos quilogramas restaram?`,answer:r,explain:`${a} − ${b} = ${r} kg`}}
+ if(k===5){a=rand(25,80);b=rand(1,25);r=a+b;return{type:'Situação-problema',html:`Uma pessoa tem <b>${a} anos</b>. Daqui a <b>${b} anos</b>, quantos anos ela terá?`,answer:r,explain:`${a} + ${b} = ${r} anos`}}
+ if(k===6){a=rand(500,1000);b=rand(120,a-50);r=a-b;return{type:'Situação-problema',html:`Um livro tem <b>${a} páginas</b>. ${n1} já leu <b>${b}</b>. Quantas páginas ainda faltam?`,answer:r,explain:`${a} − ${b} = ${r} páginas`}}
+ if(k===7){a=rand(150,700);b=rand(100,500);r=a+b;return{type:'Situação-problema',html:`${n1} marcou <b>${a} pontos</b> e ${n2} marcou <b>${b} pontos</b>. Quantos pontos fizeram juntos?`,answer:r,explain:`${a} + ${b} = ${r} pontos`}}
+ if(k===8){a=rand(500,1000);b=rand(100,a-50);r=a-b;return{type:'Situação-problema',html:`Uma escola tinha <b>${a} folhas</b> de papel e usou <b>${b}</b>. Quantas folhas sobraram?`,answer:r,explain:`${a} − ${b} = ${r}`}}
+ if(k===9){a=rand(100,600);b=rand(100,500);r=a+b;return{type:'Situação-problema',html:`Em um cofrinho havia <b>R$ ${a}</b>. Foram colocados mais <b>R$ ${b}</b>. Quanto há agora?`,answer:r,explain:`${a} + ${b} = ${r} reais`}}
+ a=rand(500,1000);b=rand(100,a-50);r=a-b;return{type:'Situação-problema',html:`Uma loja tinha <b>${a} brinquedos</b> e vendeu <b>${b}</b>. Quantos restaram?`,answer:r,explain:`${a} − ${b} = ${r}`};
+}
+function build(){let a=[];for(let x=0;x<5;x++)a.push(direct());for(let x=0;x<5;x++)a.push(word());return a.sort(()=>Math.random()-.5)}
+function startGame(){game=build();i=0;score=0;locked=false;log=[];start.classList.add('hidden');end.classList.add('hidden');gameEl().classList.remove('hidden');show()}
+function gameEl(){return document.getElementById('game')}
+function show(){locked=false;let q=game[i];counter.textContent=`Questão ${i+1} de ${TOTAL}`;scoreBadge.textContent=`⭐ ${score} ponto${score===1?'':'s'}`;bar.style.width=`${i/TOTAL*100}%`;type.textContent=q.type;problem.innerHTML=q.html;ans.value='';ans.disabled=false;check.disabled=false;fb.className='feedback';fb.textContent='';next.style.display='none';ans.focus()}
+function checkAnswer(){if(locked)return;if(ans.value===''){fb.className='feedback bad';fb.textContent='Digite uma resposta antes de conferir.';return}locked=true;let q=game[i],u=Number(ans.value),ok=u===q.answer;ans.disabled=true;check.disabled=true;if(ok){score++;fb.className='feedback ok';fb.innerHTML='✅ <b>Acertou!</b> Muito bem!'}else{fb.className='feedback bad';fb.innerHTML=`❌ <b>Quase!</b> A resposta correta é <b>${q.answer}</b>.<br>${q.explain}`}log.push({u,correct:q.answer,ok});scoreBadge.textContent=`⭐ ${score} ponto${score===1?'':'s'}`;next.style.display='block'}
+function nextQuestion(){i++;if(i>=TOTAL)finish();else show()}
+function finish(){gameEl().classList.add('hidden');end.classList.remove('hidden');final.textContent=`${score}/${TOTAL}`;msg.textContent=score===10?'Excelente! Acertou todas! 🌟':score>=8?'Muito bem! Está evoluindo bastante. 👏':score>=6?'Bom treino! Revise as que errou. 📚':'Vamos praticar mais um pouco. Você consegue! 💪';review.innerHTML='<b>Revisão da rodada</b>'+log.map((x,j)=>`<div>${x.ok?'✅':'❌'} ${j+1}. Sua resposta: ${x.u} | Correta: ${x.correct}</div>`).join('')}
+ans.addEventListener('keydown',e=>{if(e.key==='Enter'){locked?nextQuestion():checkAnswer()}})
+</script></body></html>
